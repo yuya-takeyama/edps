@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of Evenement.
+ * This file is part of Edps.
  *
  * (c) Igor Wiedler <igor@wiedler.ch>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Evenement\Tests;
+namespace Edps\Tests;
 
-use Evenement\EventEmitter;
+use Edps\EventEmitter;
 
 class EventEmitterTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +35,7 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
 
     public function testAddListenerWithStaticMethod()
     {
-        $this->emitter->on('bar', ['Evenement\Tests\Listener', 'onBar']);
+        $this->emitter->on('bar', ['Edps\Tests\Listener', 'onBar']);
     }
 
     public function testAddListenerWithInvalidListener()

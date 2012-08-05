@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of Evenement.
+ * This file is part of Edps.
  *
  * (c) Igor Wiedler <igor@wiedler.ch>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Evenement;
+namespace Edps;
 
 trait EventEmitterTrait
 {
