@@ -73,37 +73,26 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 
     public function testEmitWithOneArgument()
     {
-        $test = $this;
+        $listener = $this->getMock('Edps_Tests_Listener', array('onFoo'));
+        $listener->expects($this->once())
+            ->method('onFoo')
+            ->with('bar');
 
-        $listenerCalled = false;
+        $this->emitter->on('foo', array($listener, 'onFoo'));
 
-        $this->emitter->on('foo', function ($value) use (&$listenerCalled, $test) {
-            $listenerCalled = true;
-
-            $test->assertSame('bar', $value);
-        });
-
-        $this->assertSame(false, $listenerCalled);
         $this->emitter->emit('foo', array('bar'));
-        $this->assertSame(true, $listenerCalled);
     }
 
     public function testEmitWithTwoArguments()
     {
-        $test = $this;
+        $listener = $this->getMock('Edps_Tests_Listener', array('onFoo'));
+        $listener->expects($this->once())
+            ->method('onFoo')
+            ->with('bar', 'baz');
 
-        $listenerCalled = false;
+        $this->emitter->on('foo', array($listener, 'onFoo'));
 
-        $this->emitter->on('foo', function ($arg1, $arg2) use (&$listenerCalled, $test) {
-            $listenerCalled = true;
-
-            $test->assertSame('bar', $arg1);
-            $test->assertSame('baz', $arg2);
-        });
-
-        $this->assertSame(false, $listenerCalled);
         $this->emitter->emit('foo', array('bar', 'baz'));
-        $this->assertSame(true, $listenerCalled);
     }
 
     public function testEmitWithNoListeners()
