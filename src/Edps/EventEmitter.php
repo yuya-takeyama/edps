@@ -17,6 +17,9 @@ class Edps_EventEmitter implements Edps_EventEmitterInterface
 
     public function on($event, $listener)
     {
+        if (!is_callable($listener)) {
+            throw new InvalidArgumentException('Event listener must be callable');
+        }
         if (!isset($this->listeners[$event])) {
             $this->listeners[$event] = array();
         }

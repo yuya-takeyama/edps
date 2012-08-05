@@ -21,6 +21,11 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
         $this->emitter = new Edps_EventEmitter;
     }
 
+    public function testAddListenerWithFunctionName()
+    {
+        $this->emitter->on('foo', 'basicFunctionEventListener');
+    }
+
     public function testAddListenerWithLambda()
     {
         $this->emitter->on('foo', create_function('', ''));
@@ -38,7 +43,7 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException
+     * @expectedException InvalidArgumentException
      */
     public function testAddListenerWithInvalidListener()
     {
@@ -179,4 +184,8 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
         $this->emitter->emit('bar');
         $this->assertSame(0, $listener->getCalledCount());
     }
+}
+
+function basicFunctionEventListener()
+{
 }
