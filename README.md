@@ -39,13 +39,24 @@ require 'vendor/autoload.php';
 $emitter = new Edps_EventEmitter();
 ```
 
-### Adding Listeners
+### Adding Listeners (>= PHP 5.3)
 
 ```php
 <?php
 $emitter->on('user.create', function (User $user) use ($logger) {
     $logger->log(sprintf("User '%s' was created.", $user->getLogin()));
 });
+```
+
+### Adding Listeners (< PHP 5.3)
+
+```php
+<?php
+$emitter->on('user.create', 'onUserCreate');
+function onUserCreate(User $user) {
+		global $logger;
+    $logger->log(sprintf("User '%s' was created.", $user->getLogin()));
+}
 ```
 
 ### Emitting Events
