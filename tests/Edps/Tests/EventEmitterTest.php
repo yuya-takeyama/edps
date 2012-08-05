@@ -10,6 +10,7 @@
  */
 require_once 'Edps/EventEmitter.php';
 require_once 'Edps/Tests/Listener.php';
+require_once 'Edps/Tests/CountingListener.php';
 
 class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 {
@@ -22,7 +23,7 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 
     public function testAddListenerWithLambda()
     {
-        $this->emitter->on('foo', function () {});
+        $this->emitter->on('foo', create_function('', ''));
     }
 
     public function testAddListenerWithMethod()
@@ -47,34 +48,28 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 
     public function testOnce()
     {
-        $listenerCalled = 0;
+        $listener = new Edps_Tests_CountingListener;
+        $this->emitter->once('foo', array($listener, 'call'));
 
-        $this->emitter->once('foo', function () use (&$listenerCalled) {
-            $listenerCalled++;
-        });
-
-        $this->assertSame(0, $listenerCalled);
+        $this->assertSame(0, $listener->getCalledCount());
 
         $this->emitter->emit('foo');
 
-        $this->assertSame(1, $listenerCalled);
+        $this->assertSame(1, $listener->getCalledCount());
 
         $this->emitter->emit('foo');
 
-        $this->assertSame(1, $listenerCalled);
+        $this->assertSame(1, $listener->getCalledCount());
     }
 
     public function testEmitWithoutArguments()
     {
-        $listenerCalled = false;
+        $listener = new Edps_Tests_CountingListener;
+        $this->emitter->on('foo', array($listener, 'call'));
 
-        $this->emitter->on('foo', function () use (&$listenerCalled) {
-            $listenerCalled = true;
-        });
-
-        $this->assertSame(false, $listenerCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
-        $this->assertSame(true, $listenerCalled);
+        $this->assertSame(1, $listener->getCalledCount());
     }
 
     public function testEmitWithOneArgument()
@@ -121,100 +116,79 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 
     public function testEmitWithTwoListeners()
     {
-        $listenersCalled = 0;
+        $listener = new Edps_Tests_CountingListener;
+        $this->emitter->on('foo', array($listener, 'call'));
 
-        $this->emitter->on('foo', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
+        $this->emitter->on('foo', array($listener, 'call'));
 
-        $this->emitter->on('foo', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
-
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
-        $this->assertSame(2, $listenersCalled);
+        $this->assertSame(2, $listener->getCalledCount());
     }
 
     public function testRemoveListenerMatching()
     {
-        $listenersCalled = 0;
+        $listener = new Edps_Tests_CountingListener;
+        $listenerMethod = array($listener, 'call');
 
-        $listener = function () use (&$listenersCalled) {
-            $listenersCalled++;
-        };
+        $this->emitter->on('foo', $listenerMethod);
+        $this->emitter->removeListener('foo', $listenerMethod);
 
-        $this->emitter->on('foo', $listener);
-        $this->emitter->removeListener('foo', $listener);
-
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
     }
 
     public function testRemoveListenerNotMatching()
     {
-        $listenersCalled = 0;
+        $listener = new Edps_Tests_CountingListener;
+        $listenerMethod = array($listener, 'call');
 
-        $listener = function () use (&$listenersCalled) {
-            $listenersCalled++;
-        };
+        $this->emitter->on('foo', $listenerMethod);
+        $this->emitter->removeListener('bar', $listenerMethod);
 
-        $this->emitter->on('foo', $listener);
-        $this->emitter->removeListener('bar', $listener);
-
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
-        $this->assertSame(1, $listenersCalled);
+        $this->assertSame(1, $listener->getCalledCount());
     }
 
     public function testRemoveAllListenersMatching()
     {
-        $listenersCalled = 0;
-
-        $this->emitter->on('foo', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
+        $listener = new Edps_Tests_CountingListener;
+        $this->emitter->on('foo', array($listener, 'call'));
 
         $this->emitter->removeAllListeners('foo');
 
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
     }
 
     public function testRemoveAllListenersNotMatching()
     {
-        $listenersCalled = 0;
-
-        $this->emitter->on('foo', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
+        $listener = new Edps_Tests_CountingListener;
+        $this->emitter->on('foo', array($listener, 'call'));
 
         $this->emitter->removeAllListeners('bar');
 
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
-        $this->assertSame(1, $listenersCalled);
+        $this->assertSame(1, $listener->getCalledCount());
     }
 
     public function testRemoveAllListenersWithoutArguments()
     {
-        $listenersCalled = 0;
+        $listener = new Edps_Tests_CountingListener;
+        $listenerMethod = array($listener, 'call');
+        $this->emitter->on('foo', $listenerMethod);
 
-        $this->emitter->on('foo', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
-
-        $this->emitter->on('bar', function () use (&$listenersCalled) {
-            $listenersCalled++;
-        });
+        $this->emitter->on('bar', $listenerMethod);
 
         $this->emitter->removeAllListeners();
 
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
         $this->emitter->emit('foo');
         $this->emitter->emit('bar');
-        $this->assertSame(0, $listenersCalled);
+        $this->assertSame(0, $listener->getCalledCount());
     }
 }
