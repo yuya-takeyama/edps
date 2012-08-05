@@ -1,8 +1,6 @@
 CHANGELOG
 =========
 
-* 2.0.0 (2012-XX-XX)
+* 0.0.1 (2012-08-05)
 
- * Require PHP >=5.4.0
- * Added EventEmitterTrait
- * Removed EventEmitter2
+ * Initial release

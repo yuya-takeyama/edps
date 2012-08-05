@@ -1,37 +1,19 @@
-# Événement
+# EDPS
 
-Événement is a very simple event dispatching library for PHP.
+EDPS is a PHP 5.2 port of [igorw](https://github.com/igorw)'s [Événement](https://github.com/igorw/evenement).
 
-It has the same design goals as [Silex](http://silex-project.org) and
-[Pimple](http://pimple-project.org), to empower the user while staying concise
-and simple.
-
-It is very strongly inspired by the EventEmitter API found in
-[node.js](http://nodejs.org).
-
-[![Build Status](https://secure.travis-ci.org/igorw/evenement.png)](http://travis-ci.org/igorw/evenement)
+[![Build Status](https://secure.travis-ci.org/yuya-takeyama/edps.png)](http://travis-ci.org/yuya-takeyama/edps)
 
 ## Fetch
 
-The recommended way to install Événement is [through composer](http://getcomposer.org).
+The recommended way to install EDPS is [through composer](http://getcomposer.org).
 
 Just create a composer.json file for your project:
 
 ```JSON
 {
     "require": {
-        "evenement/evenement": "dev-master"
-    }
-}
-```
-
-**Note:** The `dev-master` version of Événement requires PHP 5.4. If you are
-using PHP 5.3, please use the `1.0.*` version:
-
-```JSON
-{
-    "require": {
-        "evenement/evenement": "1.0.*"
+        "edps/edps": "dev-master"
     }
 }
 ```
@@ -54,16 +36,27 @@ require 'vendor/autoload.php';
 
 ```php
 <?php
-$emitter = new Evenement\EventEmitter();
+$emitter = new Edps_EventEmitter();
 ```
 
-### Adding Listeners
+### Adding Listeners (>= PHP 5.3)
 
 ```php
 <?php
 $emitter->on('user.create', function (User $user) use ($logger) {
     $logger->log(sprintf("User '%s' was created.", $user->getLogin()));
 });
+```
+
+### Adding Listeners (< PHP 5.3)
+
+```php
+<?php
+$emitter->on('user.create', 'onUserCreate');
+function onUserCreate(User $user) {
+		global $logger;
+    $logger->log(sprintf("User '%s' was created.", $user->getLogin()));
+}
 ```
 
 ### Emitting Events
