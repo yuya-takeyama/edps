@@ -37,13 +37,12 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
         $this->emitter->on('bar', array('Edps_Tests_Listener', 'onBar'));
     }
 
+    /**
+     * @expectedException
+     */
     public function testAddListenerWithInvalidListener()
     {
-        try {
-            $this->emitter->on('foo', 'not a callable');
-            $this->fail();
-        } catch (\Exception $e) {
-        }
+        $this->emitter->on('foo', 'not a callable');
     }
 
     public function testOnce()
