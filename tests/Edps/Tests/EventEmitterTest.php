@@ -1,25 +1,21 @@
 <?php
-
 /*
  * This file is part of Edps.
  *
- * (c) Igor Wiedler <igor@wiedler.ch>
+ * (c) Igor Wiedler  <igor@wiedler.ch>
+ * (c) Yuya Takeyama <sign.of.the.wolf.pentagram@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Edps\Tests;
-
-use Edps\EventEmitter;
-
-class EventEmitterTest extends \PHPUnit_Framework_TestCase
+class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 {
     private $emitter;
 
     public function setUp()
     {
-        $this->emitter = new EventEmitter();
+        $this->emitter = new Edps_EventEmitter;
     }
 
     public function testAddListenerWithLambda()
@@ -29,13 +25,13 @@ class EventEmitterTest extends \PHPUnit_Framework_TestCase
 
     public function testAddListenerWithMethod()
     {
-        $listener = new Listener();
+        $listener = new Edps_Tests_Listener();
         $this->emitter->on('foo', [$listener, 'onFoo']);
     }
 
     public function testAddListenerWithStaticMethod()
     {
-        $this->emitter->on('bar', ['Edps\Tests\Listener', 'onBar']);
+        $this->emitter->on('bar', ['Edps_Tests_Listener', 'onBar']);
     }
 
     public function testAddListenerWithInvalidListener()
