@@ -1,6 +1,6 @@
 # EDPS
 
-EDPS is a PHP 5.2 port of Événement.
+EDPS is a PHP 5.2 port of [igorw](https://github.com/igorw)'s [Événement](https://github.com/igorw/evenement).
 
 [![Build Status](https://secure.travis-ci.org/yuya-takeyama/edps.png)](http://travis-ci.org/yuya-takeyama/edps)
 
