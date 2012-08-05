@@ -25,6 +25,7 @@ class Edps_OnceListener
     public function call()
     {
         $this->parentEmitter->removeListener($this->event, array($this, 'call'));
-        call_user_func_array($this->listener, func_get_args());
+        $args = func_get_args();
+        call_user_func_array($this->listener, $args);
     }
 }
