@@ -2,18 +2,19 @@
 /*
  * This file is part of Edps.
  *
- * (c) Igor Wiedler <igor@wiedler.ch>
+ * (c) Igor Wiedler  <igor@wiedler.ch>
  * (c) Yuya Takeyama <sign.of.the.wolf.pentagram@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+require_once 'Edps/EventEmitterInterface.php';
 
-class Edps_EventEmitter
+class Edps_EventEmitter implements Edps_EventEmitterInterface
 {
     protected $listeners = [];
 
-    public function on($event, callable $listener)
+    public function on($event, $listener)
     {
         if (!isset($this->listeners[$event])) {
             $this->listeners[$event] = [];
@@ -22,7 +23,7 @@ class Edps_EventEmitter
         $this->listeners[$event][] = $listener;
     }
 
-    public function once($event, callable $listener)
+    public function once($event, $listener)
     {
         $onceListener = function () use (&$onceListener, $event, $listener) {
             $this->removeListener($event, $onceListener);
@@ -33,7 +34,7 @@ class Edps_EventEmitter
         $this->on($event, $onceListener);
     }
 
-    public function removeListener($event, callable $listener)
+    public function removeListener($event, $listener)
     {
         if (isset($this->listeners[$event])) {
             if (false !== $index = array_search($listener, $this->listeners[$event], true)) {

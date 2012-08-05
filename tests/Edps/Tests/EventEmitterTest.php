@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+require_once 'Edps/EventEmitter.php';
+require_once 'Edps/Tests/Listener.php';
 
 class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
 {
