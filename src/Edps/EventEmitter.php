@@ -12,12 +12,12 @@ require_once 'Edps/EventEmitterInterface.php';
 
 class Edps_EventEmitter implements Edps_EventEmitterInterface
 {
-    protected $listeners = [];
+    protected $listeners = array();
 
     public function on($event, $listener)
     {
         if (!isset($this->listeners[$event])) {
-            $this->listeners[$event] = [];
+            $this->listeners[$event] = array();
         }
 
         $this->listeners[$event][] = $listener;
@@ -25,8 +25,9 @@ class Edps_EventEmitter implements Edps_EventEmitterInterface
 
     public function once($event, $listener)
     {
-        $onceListener = function () use (&$onceListener, $event, $listener) {
-            $this->removeListener($event, $onceListener);
+        $self = $this;
+        $onceListener = function () use (&$onceListener, $event, $listener, &$self) {
+            $self->removeListener($event, $onceListener);
 
             call_user_func_array($listener, func_get_args());
         };
@@ -48,16 +49,16 @@ class Edps_EventEmitter implements Edps_EventEmitterInterface
         if ($event !== null) {
             unset($this->listeners[$event]);
         } else {
-            $this->listeners = [];
+            $this->listeners = array();
         }
     }
 
     public function listeners($event)
     {
-        return isset($this->listeners[$event]) ? $this->listeners[$event] : [];
+        return isset($this->listeners[$event]) ? $this->listeners[$event] : array();
     }
 
-    public function emit($event, array $arguments = [])
+    public function emit($event, array $arguments = array())
     {
         foreach ($this->listeners($event) as $listener) {
             call_user_func_array($listener, $arguments);

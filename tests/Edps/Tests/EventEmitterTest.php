@@ -28,12 +28,12 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
     public function testAddListenerWithMethod()
     {
         $listener = new Edps_Tests_Listener();
-        $this->emitter->on('foo', [$listener, 'onFoo']);
+        $this->emitter->on('foo', array($listener, 'onFoo'));
     }
 
     public function testAddListenerWithStaticMethod()
     {
-        $this->emitter->on('bar', ['Edps_Tests_Listener', 'onBar']);
+        $this->emitter->on('bar', array('Edps_Tests_Listener', 'onBar'));
     }
 
     public function testAddListenerWithInvalidListener()
@@ -90,7 +90,7 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
         });
 
         $this->assertSame(false, $listenerCalled);
-        $this->emitter->emit('foo', ['bar']);
+        $this->emitter->emit('foo', array('bar'));
         $this->assertSame(true, $listenerCalled);
     }
 
@@ -108,15 +108,15 @@ class Edps_Tests_EventEmitterTest extends PHPUnit_Framework_TestCase
         });
 
         $this->assertSame(false, $listenerCalled);
-        $this->emitter->emit('foo', ['bar', 'baz']);
+        $this->emitter->emit('foo', array('bar', 'baz'));
         $this->assertSame(true, $listenerCalled);
     }
 
     public function testEmitWithNoListeners()
     {
         $this->emitter->emit('foo');
-        $this->emitter->emit('foo', ['bar']);
-        $this->emitter->emit('foo', ['bar', 'baz']);
+        $this->emitter->emit('foo', array('bar'));
+        $this->emitter->emit('foo', array('bar', 'baz'));
     }
 
     public function testEmitWithTwoListeners()
