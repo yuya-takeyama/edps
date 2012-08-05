@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 require_once 'Edps/EventEmitterInterface.php';
+require_once 'Edps/OnceListener.php';
 
 class Edps_EventEmitter implements Edps_EventEmitterInterface
 {
@@ -25,14 +26,8 @@ class Edps_EventEmitter implements Edps_EventEmitterInterface
 
     public function once($event, $listener)
     {
-        $self = $this;
-        $onceListener = function () use (&$onceListener, $event, $listener, &$self) {
-            $self->removeListener($event, $onceListener);
-
-            call_user_func_array($listener, func_get_args());
-        };
-
-        $this->on($event, $onceListener);
+        $onceListener = new Edps_OnceListener($this, $event, $listener);
+        $this->on($event, array($onceListener, 'call'));
     }
 
     public function removeListener($event, $listener)
