@@ -8,9 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-require_once 'Edps/EventEmitterInterface.php';
-require_once 'Edps/OnceListener.php';
-
 class Edps_EventEmitter implements Edps_EventEmitterInterface
 {
     protected $listeners = array();
