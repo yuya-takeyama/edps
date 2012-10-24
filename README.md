@@ -54,7 +54,8 @@ $emitter->on('user.create', function (User $user) use ($logger) {
 <?php
 $emitter->on('user.create', 'onUserCreate');
 function onUserCreate(User $user) {
-		global $logger;
+    global $logger;
+
     $logger->log(sprintf("User '%s' was created.", $user->getLogin()));
 }
 ```
